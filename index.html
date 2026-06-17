@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שף שי</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>🤖 שף שי 👨‍🍳</h1>
+
+        <p>אני אמצא לך מתכון טעים!</p>
+
+        <button id="recipeButton">
+            🍲 מתכונים
+        </button>
+
+        <div id="ingredients" style="display:none; margin-top:30px;">
+
+            <h2>מה יש בבית?</h2>
+
+            <label>
+                <input type="checkbox" value="ביצים">
+                🥚 ביצים
+            </label>
+            <br><br>
+
+            <label>
+                <input type="checkbox" value="גבינה">
+                🧀 גבינה
+            </label>
+            <br><br>
+
+            <label>
+                <input type="checkbox" value="פסטה">
+                🍝 פסטה
+            </label>
+            <br><br>
+
+            <label>
+                <input type="checkbox" value="לחם">
+                🍞 לחם
+            </label>
+            <br><br>
+
+            <label>
+                <input type="checkbox" value="שוקולד">
+                🍫 שוקולד
+            </label>
+            <br><br>
+
+            <label>
+                <input type="checkbox" value="בננה">
+                🍌 בננה
+            </label>
+
+            <br><br>
+
+            <button id="findRecipe">
+                🔍 מצא לי מתכון
+            </button>
+
+            <div id="recipeResult" style="margin-top:20px;"></div>
+
+        </div>
+
+    </div>
+
+    <script src="recipes.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
