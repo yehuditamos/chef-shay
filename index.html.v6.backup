@@ -13,7 +13,6 @@
     <div id="welcome">
         <h1>🤖 רובושף</h1>
         <button id="recipeButton">🍲 מתחילים</button>
-        <button id="favoritesBtn">❤️ המתכונים שלי</button>
     </div>
 
     <!-- Persistent header shown on screens 1-5 -->
@@ -28,17 +27,13 @@
             <span class="dot" id="dot2"></span>
             <span class="dot" id="dot3"></span>
             <span class="dot" id="dot4"></span>
-            <span class="dot" id="dot5"></span>
         </div>
-        <div class="progress-label" id="progressText">שלב 1 מתוך 5</div>
+        <div class="progress-label" id="progressText">שלב 1 מתוך 4</div>
     </div>
 
     <!-- Screen 1: Ingredients -->
     <div id="step1" style="display:none;">
         <h2>🥚 מה יש בבית?</h2>
-        <div class="have-all-row">
-            <label><input type="checkbox" id="haveEverything"> ✅ יש לי הכל בבית</label>
-        </div>
         <div class="checkbox-list">
             <label><input type="checkbox" value="ביצים"> 🥚 ביצים</label>
             <label><input type="checkbox" value="גבינה"> 🧀 גבינה</label>
@@ -54,53 +49,27 @@
             <label><input type="checkbox" value="תירס"> 🌽 תירס</label>
             <label><input type="checkbox" value="תפוח אדמה"> 🥔 תפוח אדמה</label>
             <label><input type="checkbox" value="עוף"> 🍗 עוף</label>
-            <label><input type="checkbox" value="יוגורט"> 🥣 יוגורט</label>
-            <label><input type="checkbox" value="קוטג'"> 🧀 קוטג'</label>
-            <label><input type="checkbox" value="גזר"> 🥕 גזר</label>
-            <label><input type="checkbox" value="פלפל"> 🫑 פלפל</label>
-            <label><input type="checkbox" value="אבוקדו"> 🥑 אבוקדו</label>
-            <label><input type="checkbox" value="אורז"> 🍚 אורז</label>
-            <label><input type="checkbox" value="קמח"> 🌾 קמח</label>
-            <label><input type="checkbox" value="ריבה"> 🍓 ריבה</label>
-            <label><input type="checkbox" value="ממרח שוקולד"> 🍫 ממרח שוקולד</label>
-            <label><input type="checkbox" value="פיתה"> 🫓 פיתה</label>
-            <label><input type="checkbox" value="טונה"> 🐟 טונה</label>
         </div>
         <div class="nav-buttons">
-            <button class="btn-next" onclick="showStep(2)">⬅️ הבא</button>
+            <button class="btn-next" onclick="showStep(2)">➡️ הבא</button>
         </div>
     </div>
 
-    <!-- Screen 2: Category -->
+    <!-- Screen 2: Taste -->
     <div id="step2" style="display:none;">
-        <h2>🍽️ מה בא לך להכין?</h2>
-        <div class="radio-list">
-            <label><input type="radio" name="category" value="breakfast"> ☀️ ארוחת בוקר</label>
-            <label><input type="radio" name="category" value="meal"> 🍽️ ארוחה</label>
-            <label><input type="radio" name="category" value="snack"> 🥨 חטיף</label>
-            <label><input type="radio" name="category" value="dessert"> 🍰 קינוח</label>
-        </div>
-        <div class="nav-buttons">
-            <button class="btn-back" onclick="showStep(1)">חזור ➡️</button>
-            <button class="btn-next" onclick="showStep(3)">⬅️ הבא</button>
-        </div>
-    </div>
-
-    <!-- Screen 3: Taste -->
-    <div id="step3" style="display:none;">
         <h2>🍫 מה בא לך?</h2>
         <div class="radio-list">
             <label><input type="radio" name="type" value="מתוק"> 🍫 מתוק</label>
             <label><input type="radio" name="type" value="מלוח"> 🧂 מלוח</label>
         </div>
         <div class="nav-buttons">
-            <button class="btn-back" onclick="showStep(2)">חזור ➡️</button>
-            <button class="btn-next" onclick="showStep(4)">⬅️ הבא</button>
+            <button class="btn-back" onclick="showStep(1)">חזור ⬅️</button>
+            <button class="btn-next" onclick="showStep(3)">➡️ הבא</button>
         </div>
     </div>
 
-    <!-- Screen 4: Time -->
-    <div id="step4" style="display:none;">
+    <!-- Screen 3: Time -->
+    <div id="step3" style="display:none;">
         <h2>⏰ כמה זמן יש לך?</h2>
         <select id="time">
             <option value="5">5 דקות</option>
@@ -109,13 +78,13 @@
             <option value="30">30 דקות+</option>
         </select>
         <div class="nav-buttons">
-            <button class="btn-back" onclick="showStep(3)">חזור ➡️</button>
-            <button class="btn-next" onclick="showStep(5)">⬅️ הבא</button>
+            <button class="btn-back" onclick="showStep(2)">חזור ⬅️</button>
+            <button class="btn-next" onclick="showStep(4)">➡️ הבא</button>
         </div>
     </div>
 
-    <!-- Screen 5: Cooking method -->
-    <div id="step5" style="display:none;">
+    <!-- Screen 4: Cooking method -->
+    <div id="step4" style="display:none;">
         <h2>🔥 איך מכינים?</h2>
         <select id="method">
             <option value="">🍽️ כל שיטה</option>
@@ -125,37 +94,22 @@
             <option value="בלי בישול">🥗 בלי בישול</option>
         </select>
         <div class="nav-buttons">
-            <button class="btn-back" onclick="showStep(4)">חזור ➡️</button>
-            <button class="btn-next" onclick="showStep(6)">⬅️ הבא</button>
+            <button class="btn-back" onclick="showStep(3)">חזור ⬅️</button>
+            <button class="btn-next" onclick="showStep(5)">➡️ הבא</button>
         </div>
     </div>
 
-    <!-- Screen 6: Find Recipe -->
-    <div id="step6" style="display:none;">
+    <!-- Screen 5: Result -->
+    <div id="step5" style="display:none;">
         <button id="findRecipe">🔍 מצא לי מתכון</button>
-        <div class="nav-buttons">
-            <button class="btn-back" onclick="showStep(5)">חזור ➡️</button>
-        </div>
-    </div>
-
-    <!-- Screen 7: Result -->
-    <div id="step7" style="display:none;">
-        <div id="recipeResult"></div>
         <div class="secondary-buttons">
-            <button id="favoriteBtn" style="display:none;">☆ שמור למועדפים</button>
-            <button id="anotherRecipe" style="display:none;">🔄 עוד רעיון</button>
-            <button id="resetApp" style="display:none;">🏠 התחל מחדש</button>
+            <button id="surpriseRecipe">🎲 הפתע אותי</button>
+            <button id="anotherRecipe">🔄 עוד רעיון</button>
+            <button id="resetApp">🏠 התחל מחדש</button>
         </div>
+        <div id="recipeResult"></div>
+        <!-- Logo placeholder — future RoboChef logo goes here -->
         <div id="logoPlaceholder"></div>
-    </div>
-
-    <!-- Screen 8: Favorites -->
-    <div id="step8" style="display:none;">
-        <h2>❤️ המתכונים שלי</h2>
-        <div id="favoritesList"></div>
-        <div class="nav-buttons">
-            <button class="btn-back" onclick="showWelcome()">🏠 חזור הביתה</button>
-        </div>
     </div>
 
 </div>

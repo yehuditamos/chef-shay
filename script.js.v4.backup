@@ -1,0 +1,162 @@
+let lastRecipes = [];
+
+const recipeButton   = document.getElementById("recipeButton");
+const findRecipe     = document.getElementById("findRecipe");
+const surpriseRecipe = document.getElementById("surpriseRecipe");
+const anotherRecipe  = document.getElementById("anotherRecipe");
+const resetApp       = document.getElementById("resetApp");
+const recipeResult   = document.getElementById("recipeResult");
+const welcome        = document.getElementById("welcome");
+const appHeader      = document.getElementById("appHeader");
+const progressBar    = document.getElementById("progressBar");
+const progressText   = document.getElementById("progressText");
+
+function showStep(n) {
+    welcome.style.display = "none";
+
+    [1, 2, 3, 4, 5].forEach(function (i) {
+        document.getElementById("step" + i).style.display = "none";
+    });
+
+    document.getElementById("step" + n).style.display = "block";
+    appHeader.style.display = "block";
+
+    if (n <= 4) {
+        progressBar.style.display = "block";
+        progressText.textContent = "שלב " + n + " מתוך 4";
+        [1, 2, 3, 4].forEach(function (i) {
+            var dot = document.getElementById("dot" + i);
+            if (i <= n) {
+                dot.classList.add("active");
+            } else {
+                dot.classList.remove("active");
+            }
+        });
+    } else {
+        progressBar.style.display = "none";
+    }
+}
+
+function showWelcome() {
+    welcome.style.display = "block";
+    appHeader.style.display = "none";
+    progressBar.style.display = "none";
+
+    [1, 2, 3, 4, 5].forEach(function (i) {
+        document.getElementById("step" + i).style.display = "none";
+    });
+
+    recipeResult.innerHTML = "";
+    lastRecipes = [];
+
+    document.querySelectorAll("#step1 input[type='checkbox']").forEach(function (cb) {
+        cb.checked = false;
+    });
+    document.querySelectorAll("input[name='type']").forEach(function (r) {
+        r.checked = false;
+    });
+    document.getElementById("time").selectedIndex = 0;
+    document.getElementById("method").selectedIndex = 0;
+}
+
+function showRecipe(recipe, icon, missing) {
+    var stepsHtml = "";
+    for (var i = 0; i < recipe.steps.length; i++) {
+        stepsHtml += "<li>" + recipe.steps[i] + "</li>";
+    }
+
+    var missingHtml = "";
+    if (missing && missing.length > 0) {
+        missingHtml = '<p class="missing-msg">⚠️ חסר לך: ' + missing.join(", ") + '</p>';
+    }
+
+    recipeResult.innerHTML =
+        '<div class="recipe-card">' +
+        '<h2>' + (icon || "") + " " + recipe.name + '</h2>' +
+        missingHtml +
+        '<p>' + recipe.description + '</p>' +
+        '<p>⏱️ ' + recipe.time + ' דקות</p>' +
+        '<p>🔥 ' + recipe.method + '</p>' +
+        '<h3>👨‍🍳 שלבי הכנה</h3>' +
+        '<ol>' + stepsHtml + '</ol>' +
+        '</div>';
+}
+
+recipeButton.addEventListener("click", function () {
+    showStep(1);
+});
+
+findRecipe.addEventListener("click", function () {
+    var selectedIngredients = [];
+    document.querySelectorAll("#step1 input[type='checkbox']").forEach(function (checkbox) {
+        if (checkbox.checked) {
+            selectedIngredients.push(checkbox.value);
+        }
+    });
+
+    var selectedTypeEl = document.querySelector("input[name='type']:checked");
+    var selectedType   = selectedTypeEl ? selectedTypeEl.value : null;
+    var selectedTime   = Number(document.getElementById("time").value);
+    var selectedMethod = document.getElementById("method").value;
+
+    // Sort each recipe into the tier matching its missing-ingredient count (0–3).
+    // Recipes failing type / time / method filters are skipped entirely.
+    // Recipes missing more than 3 ingredients are also skipped.
+    var tiers = [[], [], [], []];
+
+    recipes.forEach(function (recipe) {
+        var hasType   = !selectedType   || recipe.type   === selectedType;
+        var hasTime   =  recipe.time    <= selectedTime;
+        var hasMethod = !selectedMethod || recipe.method === selectedMethod;
+
+        if (!hasType || !hasTime || !hasMethod) return;
+
+        var missing = recipe.ingredients.filter(function (ing) {
+            return !selectedIngredients.includes(ing);
+        });
+
+        if (missing.length <= 3) {
+            tiers[missing.length].push({ recipe: recipe, missing: missing });
+        }
+    });
+
+    // Use the best (lowest) tier that has at least one result.
+    var pool = null;
+    for (var t = 0; t < tiers.length; t++) {
+        if (tiers[t].length > 0) {
+            pool = tiers[t];
+            break;
+        }
+    }
+
+    if (!pool) {
+        recipeResult.innerHTML =
+            '<div class="recipe-card">' +
+            '<h2>😢 לא מצאתי מתכון מתאים</h2>' +
+            '<p>נסו לשנות את הבחירות שלכם</p>' +
+            '</div>';
+        lastRecipes = [];
+        return;
+    }
+
+    lastRecipes = pool;
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    showRecipe(pick.recipe, null, pick.missing);
+});
+
+surpriseRecipe.addEventListener("click", function () {
+    var randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+    showRecipe(randomRecipe, "🎲", []);
+});
+
+anotherRecipe.addEventListener("click", function () {
+    var pool = lastRecipes.length > 0
+        ? lastRecipes
+        : recipes.map(function (r) { return { recipe: r, missing: [] }; });
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    showRecipe(pick.recipe, "🔄", pick.missing);
+});
+
+resetApp.addEventListener("click", function () {
+    showWelcome();
+});

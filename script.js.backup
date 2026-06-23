@@ -1,0 +1,140 @@
+let lastRecipes = [];
+
+const recipeButton = document.getElementById("recipeButton");
+const findRecipe = document.getElementById("findRecipe");
+const surpriseRecipe = document.getElementById("surpriseRecipe");
+const resetApp = document.getElementById("resetApp");
+const recipeResult = document.getElementById("recipeResult");
+
+recipeButton.addEventListener("click", function () {
+document.getElementById("ingredients").style.display = "block";
+});
+
+function showRecipe(recipe, icon) {
+
+```
+let stepsHtml = "";
+
+for (let i = 0; i < recipe.steps.length; i++) {
+    stepsHtml += "<li>" + recipe.steps[i] + "</li>";
+}
+
+recipeResult.innerHTML =
+    '<div class="recipe-card">' +
+    '<h2>' + (icon || "") + ' ' + recipe.name + '</h2>' +
+    '<p>' + recipe.description + '</p>' +
+    '<p>⏱️ ' + recipe.time + ' דקות</p>' +
+    '<p>🔥 ' + recipe.method + '</p>' +
+    '<h3>👨‍🍳 שלבי הכנה</h3>' +
+    '<ol>' + stepsHtml + '</ol>' +
+    '</div>';
+```
+
+}
+
+findRecipe.addEventListener("click", function () {
+
+```
+const selectedIngredients = [];
+
+document.querySelectorAll("#ingredients input[type='checkbox']").forEach(function (checkbox) {
+    if (checkbox.checked) {
+        selectedIngredients.push(checkbox.value);
+    }
+});
+
+const selectedTypeElement =
+    document.querySelector("input[name='type']:checked");
+
+const selectedType =
+    selectedTypeElement ? selectedTypeElement.value : null;
+
+const selectedTime =
+    Number(document.getElementById("time").value);
+
+const selectedMethod =
+    document.getElementById("method").value;
+
+lastRecipes = recipes.filter(function (recipe) {
+
+    const hasIngredients = recipe.ingredients.every(function (ingredient) {
+        return selectedIngredients.includes(ingredient);
+    });
+
+    const hasType =
+        !selectedType || recipe.type === selectedType;
+
+    const hasTime =
+        recipe.time <= selectedTime;
+
+    const hasMethod =
+        recipe.method === selectedMethod;
+
+    return hasIngredients && hasType && hasTime && hasMethod;
+});
+
+if (lastRecipes.length === 0) {
+
+    recipeResult.innerHTML =
+        '<div class="recipe-card">' +
+        '<h2>😢 לא מצאתי מתכון מתאים</h2>' +
+        '<p>נסו לשנות את הבחירות שלכם</p>' +
+        '</div>';
+
+    return;
+}
+
+const randomRecipe =
+    lastRecipes[Math.floor(Math.random() * lastRecipes.length)];
+
+showRecipe(randomRecipe);
+```
+
+});
+
+surpriseRecipe.addEventListener("click", function () {
+
+```
+const randomRecipe =
+    recipes[Math.floor(Math.random() * recipes.length)];
+
+showRecipe(randomRecipe, "🎲");
+```
+
+});
+
+resetApp.addEventListener("click", function () {
+
+```
+document.querySelectorAll("#ingredients input[type='checkbox']")
+    .forEach(function (checkbox) {
+        checkbox.checked = false;
+    });
+
+document.querySelectorAll("input[name='type']")
+    .forEach(function (radio) {
+        radio.checked = false;
+    });
+
+document.getElementById("time").selectedIndex = 0;
+document.getElementById("method").selectedIndex = 0;
+
+recipeResult.innerHTML = "";
+lastRecipes = [];
+```
+
+});
+function showStep2() {
+
+    document.getElementById("step1").style.display = "none";
+
+    document.getElementById("step2").style.display = "block";
+
+}
+function showStep3() {
+
+    document.getElementById("step2").style.display = "none";
+
+    document.getElementById("step3").style.display = "block";
+
+}

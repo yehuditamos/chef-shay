@@ -1,0 +1,131 @@
+let lastRecipes = [];
+
+const recipeButton   = document.getElementById("recipeButton");
+const findRecipe     = document.getElementById("findRecipe");
+const surpriseRecipe = document.getElementById("surpriseRecipe");
+const anotherRecipe  = document.getElementById("anotherRecipe");
+const resetApp       = document.getElementById("resetApp");
+const recipeResult   = document.getElementById("recipeResult");
+const welcome        = document.getElementById("welcome");
+const appHeader      = document.getElementById("appHeader");
+const progressBar    = document.getElementById("progressBar");
+const progressText   = document.getElementById("progressText");
+
+function showStep(n) {
+    welcome.style.display = "none";
+
+    [1, 2, 3, 4, 5].forEach(function (i) {
+        document.getElementById("step" + i).style.display = "none";
+    });
+
+    document.getElementById("step" + n).style.display = "block";
+    appHeader.style.display = "block";
+
+    if (n <= 4) {
+        progressBar.style.display = "block";
+        progressText.textContent = "שלב " + n + " מתוך 4";
+        [1, 2, 3, 4].forEach(function (i) {
+            var dot = document.getElementById("dot" + i);
+            if (i <= n) {
+                dot.classList.add("active");
+            } else {
+                dot.classList.remove("active");
+            }
+        });
+    } else {
+        progressBar.style.display = "none";
+    }
+}
+
+function showWelcome() {
+    welcome.style.display = "block";
+    appHeader.style.display = "none";
+    progressBar.style.display = "none";
+
+    [1, 2, 3, 4, 5].forEach(function (i) {
+        document.getElementById("step" + i).style.display = "none";
+    });
+
+    recipeResult.innerHTML = "";
+    lastRecipes = [];
+
+    document.querySelectorAll("#step1 input[type='checkbox']").forEach(function (cb) {
+        cb.checked = false;
+    });
+    document.querySelectorAll("input[name='type']").forEach(function (r) {
+        r.checked = false;
+    });
+    document.getElementById("time").selectedIndex = 0;
+    document.getElementById("method").selectedIndex = 0;
+}
+
+function showRecipe(recipe, icon) {
+    var stepsHtml = "";
+    for (var i = 0; i < recipe.steps.length; i++) {
+        stepsHtml += "<li>" + recipe.steps[i] + "</li>";
+    }
+    recipeResult.innerHTML =
+        '<div class="recipe-card">' +
+        '<h2>' + (icon || "") + " " + recipe.name + '</h2>' +
+        '<p>' + recipe.description + '</p>' +
+        '<p>⏱️ ' + recipe.time + ' דקות</p>' +
+        '<p>🔥 ' + recipe.method + '</p>' +
+        '<h3>👨‍🍳 שלבי הכנה</h3>' +
+        '<ol>' + stepsHtml + '</ol>' +
+        '</div>';
+}
+
+recipeButton.addEventListener("click", function () {
+    showStep(1);
+});
+
+findRecipe.addEventListener("click", function () {
+    var selectedIngredients = [];
+    document.querySelectorAll("#step1 input[type='checkbox']").forEach(function (checkbox) {
+        if (checkbox.checked) {
+            selectedIngredients.push(checkbox.value);
+        }
+    });
+
+    var selectedTypeEl = document.querySelector("input[name='type']:checked");
+    var selectedType   = selectedTypeEl ? selectedTypeEl.value : null;
+    var selectedTime   = Number(document.getElementById("time").value);
+    var selectedMethod = document.getElementById("method").value;
+
+    lastRecipes = recipes.filter(function (recipe) {
+        var hasIngredients = recipe.ingredients.every(function (ing) {
+            return selectedIngredients.includes(ing);
+        });
+        var hasType   = !selectedType || recipe.type === selectedType;
+        var hasTime   = recipe.time <= selectedTime;
+        var hasMethod = recipe.method === selectedMethod;
+        return hasIngredients && hasType && hasTime && hasMethod;
+    });
+
+    if (lastRecipes.length === 0) {
+        recipeResult.innerHTML =
+            '<div class="recipe-card">' +
+            '<h2>😢 לא מצאתי מתכון מתאים</h2>' +
+            '<p>נסו לשנות את הבחירות שלכם</p>' +
+            '</div>';
+        return;
+    }
+
+    var randomRecipe = lastRecipes[Math.floor(Math.random() * lastRecipes.length)];
+    showRecipe(randomRecipe);
+});
+
+surpriseRecipe.addEventListener("click", function () {
+    var randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+    showRecipe(randomRecipe, "🎲");
+});
+
+anotherRecipe.addEventListener("click", function () {
+    var pool = lastRecipes.length > 0 ? lastRecipes : recipes;
+    var randomRecipe = pool[Math.floor(Math.random() * pool.length)];
+    showRecipe(randomRecipe, "🔄");
+});
+
+resetApp.addEventListener("click", function () {
+    showWelcome();
+});
